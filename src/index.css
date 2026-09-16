@@ -1,0 +1,347 @@
+@import "tailwindcss";
+
+/* ===================================================================
+ * TAILWIND V4 THEME
+ * =================================================================== */
+@theme {
+  /* Fonts */
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-handwriting: "Caveat", cursive;
+  --font-cute: "Gaegu", cursive;
+  --font-note: "Kalam", cursive;
+  --font-body: "Quicksand", sans-serif;
+  --font-serif: "Playfair Display", serif;
+
+  /* Colors: Envelope */
+  --color-envelope-main: #fed7aa;
+  --color-envelope-dark: #fdba74;
+  --color-envelope-shadow: #fb923c;
+  --color-envelope-border: #fbcfe8;
+
+  /* Colors: Paper */
+  --color-paper-bg: #fdfbf7;
+  --color-paper-line: #f1e7d8;
+  --color-paper-text: #5c4838;
+  --color-paper-accent: #d94862;
+
+  /* Colors: Cream */
+  --color-cream-50: #fdfbf7;
+  --color-cream-100: #f7f2e7;
+  --color-cream-200: #ede4d3;
+  --color-cream-300: #dfd0b7;
+
+  /* Colors: Pastel Pink */
+  --color-pastelPink-100: #ffe6ec;
+  --color-pastelPink-200: #ffd0dc;
+  --color-pastelPink-400: #ff85a1;
+  --color-pastelPink-500: #ff6384;
+
+  /* Colors: Linen */
+  --color-linen-50: #fdfcf9;
+  --color-linen-100: #faf6ee;
+  --color-linen-200: #f4ede0;
+  --color-linen-300: #ebe1ce;
+
+  /* Colors: Coral */
+  --color-coral-400: #ff7b72;
+  --color-coral-500: #f05a50;
+  --color-coral-600: #d94339;
+
+  /* Colors: Blush */
+  --color-blush-50: #FDF7F7;
+  --color-blush-100: #FAECEE;
+  --color-blush-200: #F5D8DB;
+  --color-blush-400: #E39CA4;
+  --color-blush-500: #D9828C;
+
+  /* Colors: Taupe */
+  --color-taupe-400: #B0A398;
+  --color-taupe-600: #7D7065;
+  --color-taupe-800: #4A4139;
+
+  /* Colors: Primary/Secondary/Tertiary Design System */
+  --color-primary: #a63934;
+  --color-primary-container: #ff7b72;
+  --color-secondary: #785a00;
+  --color-secondary-container: #ffd167;
+  --color-secondary-fixed: #ffdf9b;
+  --color-secondary-fixed-dim: #edc157;
+  --color-on-secondary-fixed: #251a00;
+  --color-tertiary: #036a5f;
+  --color-tertiary-container: #60b1a3;
+  --color-tertiary-fixed: #a0f2e3;
+  --color-on-tertiary-fixed: #00201c;
+  --color-background: #fbf9f3;
+  --color-on-surface: #1b1c19;
+  --color-on-surface-variant: #57423f;
+
+  /* Animations */
+  --animate-love-glow: love-glow 2.4s ease-in-out infinite;
+  --animate-pulse-love: pulse-love 2.2s ease-in-out infinite;
+  --animate-float-particle: float-particle 1.4s ease-out forwards;
+}
+
+/* ===================================================================
+ * KEYFRAMES
+ * =================================================================== */
+@keyframes love-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(244, 63, 94, 0.35), 0 0 35px rgba(251, 146, 60, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(244, 63, 94, 0.6), 0 0 55px rgba(251, 146, 60, 0.4);
+    transform: scale(1.06);
+  }
+}
+
+@keyframes pulse-love {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.09); }
+}
+
+@keyframes float-particle {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(var(--tx, 0px), var(--ty, -50px)) scale(1.15) rotate(15deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--tx, 0px) * 1.4), calc(var(--ty, -50px) * 1.5)) scale(0.4) rotate(45deg);
+  }
+}
+
+/* ===================================================================
+ * GLOBAL STYLES
+ * =================================================================== */
+body {
+  background-color: #fbf9f3;
+  background-image: radial-gradient(#dec0bc 1.25px, transparent 1.25px);
+  background-size: 24px 24px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #fbf9f3;
+}
+::-webkit-scrollbar-thumb {
+  background: #dec0bc;
+  border-radius: 9999px;
+}
+
+/* ===================================================================
+ * ENVELOPE STYLES (Screen 1 & 2)
+ * =================================================================== */
+.envelope-perspective {
+  perspective: 1200px;
+}
+
+.envelope-flap {
+  transform-origin: top center;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s;
+}
+
+.envelope-opened .envelope-flap {
+  transform: rotateX(180deg);
+  z-index: 10;
+}
+
+.letter-paper {
+  transition: transform 0.85s cubic-bezier(0.34, 1.3, 0.64, 1) 0.35s, opacity 0.5s ease;
+}
+
+.envelope-opened .letter-paper {
+  transform: translateY(-10%);
+  z-index: 40;
+}
+
+.lined-notes {
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 27px,
+    #f8dbce 27px,
+    #f8dbce 28px
+  );
+  line-height: 28px;
+}
+
+/* ===================================================================
+ * PARTICLE STYLES
+ * =================================================================== */
+.particle {
+  position: absolute;
+  pointer-events: none;
+  animation: float-particle 1.4s ease-out forwards;
+}
+
+/* ===================================================================
+ * PHOTOBOOK ALBUM STYLES (Screen 3)
+ * =================================================================== */
+.book-shadow {
+  box-shadow: 
+    0 24px 60px -12px rgba(189, 118, 97, 0.28),
+    0 12px 28px -6px rgba(135, 75, 59, 0.18),
+    inset 0 0 100px -20px rgba(245, 219, 203, 0.5);
+}
+
+.book-spine {
+  box-shadow: 
+    inset 10px 0 15px -8px rgba(92, 53, 40, 0.15),
+    inset -10px 0 15px -8px rgba(92, 53, 40, 0.15);
+}
+
+.page-turn-left {
+  background: linear-gradient(90deg, #fbf7ee 0%, #fffdfa 92%, #ede4d2 100%);
+}
+
+.page-turn-right {
+  background: linear-gradient(270deg, #fbf7ee 0%, #fffdfa 92%, #ede4d2 100%);
+}
+
+.washi-tape-pink {
+  background: rgba(255, 175, 190, 0.78);
+  clip-path: polygon(4% 0%, 96% 0%, 100% 100%, 0% 100%);
+  backdrop-filter: blur(1px);
+}
+
+.washi-tape-yellow {
+  background: rgba(255, 226, 138, 0.82);
+  clip-path: polygon(0% 0%, 100% 3%, 97% 97%, 3% 100%);
+  backdrop-filter: blur(1px);
+}
+
+.polaroid-frame {
+  box-shadow: 0 8px 20px -4px rgba(110, 72, 60, 0.16), 0 2px 6px rgba(0,0,0,0.06);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.polaroid-frame:hover {
+  transform: translateY(-5px) scale(1.025) rotate(0deg) !important;
+  box-shadow: 0 16px 30px -4px rgba(110, 72, 60, 0.25);
+  z-index: 30;
+}
+
+/* ===================================================================
+ * 3D MEMORY CARD FLIP STYLES (Screen 4)
+ * =================================================================== */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+.paper-cardstock {
+  background-color: #fcfaf4;
+  box-shadow: 
+    0 2px 4px rgba(92, 70, 48, 0.06),
+    0 8px 18px -4px rgba(95, 68, 42, 0.14),
+    0 18px 30px -8px rgba(78, 52, 30, 0.18),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -1.5px 0 rgba(160, 130, 100, 0.2);
+  transition: box-shadow 0.35s ease;
+}
+.paper-cardstock:hover {
+  box-shadow: 
+    0 4px 8px rgba(92, 70, 48, 0.08),
+    0 14px 26px -4px rgba(95, 68, 42, 0.2),
+    0 24px 38px -8px rgba(78, 52, 30, 0.24),
+    inset 0 1px 1px rgba(255, 255, 255, 1);
+}
+
+.paper-texture-grid {
+  background-color: #fcfaf4;
+  background-image: 
+    repeating-linear-gradient(0deg, rgba(160, 130, 100, 0.02) 0px, rgba(160, 130, 100, 0.02) 1px, transparent 1px, transparent 3px),
+    repeating-linear-gradient(90deg, rgba(160, 130, 100, 0.015) 0px, rgba(160, 130, 100, 0.015) 1px, transparent 1px, transparent 3px);
+}
+
+.embossed-border {
+  box-shadow: 
+    inset 0 1px 2px rgba(110, 85, 60, 0.2),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.9),
+    0 1px 1px rgba(255, 255, 255, 0.8);
+  border: 1.5px dashed #dfd3c3;
+}
+
+.stamp-deboss {
+  box-shadow: 
+    inset 2px 2px 4px rgba(115, 85, 55, 0.22),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.95),
+    0 2px 4px rgba(120, 90, 60, 0.1);
+}
+
+.washi-tape-mint {
+  background: rgba(186, 230, 215, 0.65);
+  box-shadow: 0 1px 3px rgba(70, 110, 100, 0.15);
+  clip-path: polygon(4% 0%, 96% 0%, 100% 50%, 96% 100%, 4% 100%, 0% 50%);
+  backdrop-filter: blur(1px);
+}
+.washi-tape-cream {
+  background: rgba(254, 240, 185, 0.7);
+  box-shadow: 0 1px 3px rgba(120, 100, 60, 0.15);
+  clip-path: polygon(4% 0%, 96% 0%, 100% 50%, 96% 100%, 4% 100%, 0% 50%);
+  backdrop-filter: blur(1px);
+}
+
+/* ===================================================================
+ * CRAFT PAPER ACCENTS (Screen 6)
+ * =================================================================== */
+.paper-card {
+  background-color: #FFFFFF;
+  box-shadow: 0 10px 30px -10px rgba(125, 112, 101, 0.12),
+              0 4px 12px -2px rgba(125, 112, 101, 0.06);
+}
+
+.washi-tape-top {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1deg);
+  width: 110px;
+  height: 28px;
+  background-color: rgba(245, 216, 219, 0.85);
+  backdrop-filter: blur(1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+  border-left: 2px dashed rgba(217, 130, 140, 0.4);
+  border-right: 2px dashed rgba(217, 130, 140, 0.4);
+  z-index: 20;
+}
+
+.washi-tape-corner {
+  position: absolute;
+  top: -10px;
+  right: 18px;
+  width: 80px;
+  height: 24px;
+  background-color: rgba(233, 223, 208, 0.8);
+  transform: rotate(12deg);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  z-index: 20;
+}
+
+/* ===================================================================
+ * PAGE TRANSITION
+ * =================================================================== */
+.page-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
