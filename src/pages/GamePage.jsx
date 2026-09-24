@@ -1,12 +1,14 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { spawnParticles } from '../utils/particles'
+import { motion } from 'framer-motion'
+import { useGsapPageAnimation } from '../hooks/useGsapPageAnimation'
 
 const CARD_DATA = [
   { id: 1, icon: '🎂', title: 'Kue Tart Cokelat', tag: 'Kue Ulang Tahun', tapeColor: 'washi-tape-pink', bgFront: 'bg-[#fffaf0]', borderColor: 'border-amber-300/80', accentColor: 'text-amber-700' },
   { id: 1, icon: '🎂', title: 'Kue Tart Cokelat', tag: 'Kue Ulang Tahun', tapeColor: 'washi-tape-pink', bgFront: 'bg-[#fffaf0]', borderColor: 'border-amber-300/80', accentColor: 'text-amber-700' },
-  { id: 2, icon: '💖', title: 'Cinta Tulus', tag: 'Harapan Manis', tapeColor: 'washi-tape-mint', bgFront: 'bg-[#fff5f6]', borderColor: 'border-rose-300/80', accentColor: 'text-rose-600' },
-  { id: 2, icon: '💖', title: 'Cinta Tulus', tag: 'Harapan Manis', tapeColor: 'washi-tape-mint', bgFront: 'bg-[#fff5f6]', borderColor: 'border-rose-300/80', accentColor: 'text-rose-600' },
+  { id: 2, icon: '💖', title: 'Cinta', tag: 'Harapan Manis', tapeColor: 'washi-tape-mint', bgFront: 'bg-[#fff5f6]', borderColor: 'border-rose-300/80', accentColor: 'text-rose-600' },
+  { id: 2, icon: '💖', title: 'Cinta', tag: 'Harapan Manis', tapeColor: 'washi-tape-mint', bgFront: 'bg-[#fff5f6]', borderColor: 'border-rose-300/80', accentColor: 'text-rose-600' },
   { id: 3, icon: '🍰', title: 'Kue Strawberry', tag: 'Penuh Manisan', tapeColor: 'washi-tape-cream', bgFront: 'bg-[#fff8f2]', borderColor: 'border-pink-300/80', accentColor: 'text-pink-600' },
   { id: 3, icon: '🍰', title: 'Kue Strawberry', tag: 'Penuh Manisan', tapeColor: 'washi-tape-cream', bgFront: 'bg-[#fff8f2]', borderColor: 'border-pink-300/80', accentColor: 'text-pink-600' },
 ]
@@ -21,6 +23,8 @@ function shuffle(arr) {
 }
 
 export default function GamePage() {
+  const pageRef = useRef(null)
+  useGsapPageAnimation(pageRef)
   const navigate = useNavigate()
   const [cards, setCards] = useState(() => shuffle(CARD_DATA))
   const [flipped, setFlipped] = useState([])
@@ -85,12 +89,20 @@ export default function GamePage() {
   }, [lockBoard, flipped, matched, cards])
 
   return (
-    <section className="min-h-screen w-full flex flex-col items-center justify-between sm:justify-center p-3 sm:p-6 md:p-8 relative select-none pt-14 sm:pt-20 pb-12 sm:pb-16">
+    <motion.section ref={pageRef}
+      className="min-h-screen w-full flex flex-col items-center justify-between sm:justify-center p-3 sm:p-6 md:p-8 relative select-none pt-14 sm:pt-20 pb-12 sm:pb-16"
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -24 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
+      <div data-gsap="curtain" className="absolute inset-0 z-50 origin-left bg-rose-100 pointer-events-none"></div>
+      <div data-gsap="click-wipe" className="absolute inset-x-0 top-0 h-1 z-50 bg-rose-400 pointer-events-none"></div>
       <header className="flex flex-col items-center mb-3 sm:mb-4 text-center z-10 shrink-0">
-        <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-stone-800 tracking-tight flex items-center justify-center gap-2 font-sans">
+        <h2 data-gsap="text" className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-stone-800 tracking-tight flex items-center justify-center gap-2 font-sans">
           Cocokkan Kartu
         </h2>
-        <p className="text-rose-600 font-handwriting text-lg sm:text-xl md:text-2xl mt-0.5 sm:mt-1">
+        <p data-gsap="text" className="text-rose-600 font-handwriting text-lg sm:text-xl md:text-2xl mt-0.5 sm:mt-1">
           Ketuk kartu untuk menemukan pasangan yang sesuai
         </p>
       </header>
@@ -125,6 +137,7 @@ export default function GamePage() {
               <div
                 key={item.uniqueKey}
                 data-card-key={item.uniqueKey}
+                data-gsap="stagger"
                 className={`perspective-1000 w-full h-[136px] xs:h-[155px] sm:h-52 md:h-60 select-none relative transition-transform duration-300 ${
                   isFlipped ? 'cursor-default' : 'cursor-pointer group hover:-translate-y-1.5'
                 }`}
@@ -173,6 +186,7 @@ export default function GamePage() {
         <button
           type="button"
           onClick={() => navigate('/cake')}
+          data-gsap-click
           className="group inline-flex items-center justify-center gap-2 sm:gap-3 w-full sm:w-auto px-5 sm:px-8 py-3 sm:py-3.5 rounded-full bg-gradient-to-r from-coral-400 via-rose-500 to-rose-400 text-white font-bold text-sm sm:text-base shadow-[0_10px_25px_-5px_rgba(244,63,94,0.45)] hover:shadow-[0_15px_30px_-5px_rgba(244,63,94,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 font-sans cursor-pointer"
         >
           <span className="text-lg sm:text-xl group-hover:scale-125 transition-transform">🎂</span>
@@ -183,6 +197,6 @@ export default function GamePage() {
         </button>
         <p className="text-stone-500 font-handwriting text-sm sm:text-lg mt-0.5 px-2">Kue tart spesial sudah menunggu untuk ditiup bersama ✨</p>
       </div>
-    </section>
+    </motion.section>
   )
 }

@@ -1,11 +1,20 @@
 import { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { spawnParticles } from "../utils/particles";
+import { motion } from "framer-motion";
+import content from "../data/content.json";
+import { useGsapPageAnimation } from "../hooks/useGsapPageAnimation";
+import { useGsapTyping } from "../hooks/useGsapTyping";
+
+const data = content.pages.envelope;
 
 export default function EnvelopePage() {
+  const pageRef = useRef(null);
+  useGsapPageAnimation(pageRef);
   const [isOpen, setIsOpen] = useState(false);
   const lockBtnRef = useRef(null);
   const navigate = useNavigate();
+  useGsapTyping(pageRef, { active: isOpen, selector: '[data-gsap-typing="letter"]' });
 
   const openEnvelope = useCallback(() => {
     if (isOpen) return;
@@ -36,9 +45,17 @@ export default function EnvelopePage() {
   );
 
   return (
-    <section className="min-h-screen w-full flex flex-col items-center justify-center p-3 sm:p-6 relative select-none py-8 sm:py-16">
+    <motion.section ref={pageRef}
+      className="min-h-screen w-full flex flex-col items-center justify-center p-3 sm:p-6 relative select-none py-8 sm:py-16"
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -24 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
+      <div data-gsap="curtain" className="absolute inset-0 z-50 origin-left bg-rose-100 pointer-events-none"></div>
+      <div data-gsap="click-wipe" className="absolute inset-x-0 top-0 h-1 z-50 bg-rose-400 pointer-events-none"></div>
       {/* Particle Container */}
-      <div
+      <div data-gsap="image"
         id="particle-container"
         className="absolute inset-0 pointer-events-none z-0"
       ></div>
@@ -78,51 +95,35 @@ export default function EnvelopePage() {
               {/* Cute Washi Tape Header */}
               <div className="absolute -top-2.5 sm:-top-3 left-1/2 -translate-x-1/2 w-24 sm:w-28 h-5 sm:h-6 bg-amber-200/90 border-y border-dashed border-amber-400/50 rounded-xs shadow-xs flex items-center justify-center -rotate-1 pointer-events-none">
                 <span className="text-[9px] sm:text-[10px] font-bold text-amber-800 tracking-wider">
-                  UNTUKMU 💖
-                </span>
-              </div>
-
-              {/* Stamp on top right */}
-              <div className="absolute top-2.5 right-2.5 sm:top-4 sm:right-4 w-7 h-9 sm:w-9 sm:h-11 border sm:border-2 border-dashed border-rose-300 bg-rose-50/90 rounded-xs flex flex-col items-center justify-center p-0.5 sm:p-1 rotate-3 shadow-2xs pointer-events-none">
-                <span className="text-rose-500 text-[10px] sm:text-xs">💌</span>
-                <span className="text-[7px] sm:text-[8px] font-sans font-semibold text-rose-400 tracking-tighter mt-0.5">
-                  LOVE
+                  {data.header.washiTapeLabel}
                 </span>
               </div>
 
               <div className="pt-1 sm:pt-2">
                 <div className="flex items-center justify-between border-b border-rose-100 pb-1.5 sm:pb-2.5 pr-8 sm:pr-10">
-                  <span className="font-cute text-sm sm:text-lg font-bold text-rose-500 tracking-wide flex items-center gap-1">
-                    <span>💌</span> Hanya Untukmu
-                  </span>
                   <span className="font-cute text-[10px] sm:text-xs text-amber-700/80 bg-amber-50 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full border border-amber-200/60">
-                    Spesial Hari Ini 🎂
+                    {data.letter.badge}
                   </span>
                 </div>
 
                 <div className="mt-2 sm:mt-4 font-handwriting text-stone-800 text-base sm:text-[20px] leading-5.5 sm:leading-7.5">
-                  <p className="font-bold text-rose-600 text-xl sm:text-3xl mb-1 sm:mb-1.5 font-handwriting">
-                    Halo Manis! 🌸
+                  <p data-gsap="text" className="font-bold text-rose-600 text-xl sm:text-3xl mb-1 sm:mb-1.5 font-handwriting">
+                    {data.letter.greeting}
                   </p>
-                  <p className="mb-1.5 sm:mb-2">
-                    Selamat bertambah usia! Hari ini semesta tersenyum lebar
-                    melihat senyummu. Makasih sudah selalu jadi manusia paling
-                    tulus, tempat cerita paling teduh, dan tawa paling lepas.
-                  </p>
-                  <p className="text-stone-600">
-                    Semoga tiap langkah barumu selalu dipeluk hangat oleh
-                    bahagia, diringankan dari resah, dan selalu dikelilingi
-                    cinta tulus.
-                  </p>
+                  {data.letter.body.map((paragraph, idx) => (
+                    <p data-gsap="text" data-gsap-typing="letter" key={idx} className={idx < data.letter.body.length - 1 ? "mb-1.5 sm:mb-2" : "text-stone-600"}>
+                      {paragraph}
+                    </p>
+                  ))}
                 </div>
               </div>
 
               <div className="pt-2 sm:pt-3 mt-1.5 sm:mt-3 flex items-center justify-between border-t border-dashed border-rose-200/80 text-xs">
                 <span className="font-handwriting text-base sm:text-xl text-rose-700 font-bold">
-                  Peluk hangat &amp; cinta ❤️
+                  {data.letter.closing}
                 </span>
                 <span className="font-cute text-stone-500 text-[10px] sm:text-xs bg-rose-50 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full border border-rose-200/50">
-                  Selamanya
+                  {data.letter.badgeBottom}
                 </span>
               </div>
             </div>
@@ -168,7 +169,7 @@ export default function EnvelopePage() {
             <div
               className={`absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300 ${isOpen ? "z-10 opacity-40 hover:opacity-100" : "z-40 opacity-100"}`}
             >
-              <button
+              <button data-gsap-click
                 ref={lockBtnRef}
                 type="button"
                 aria-label="Buka Kunci Hati"
@@ -208,7 +209,7 @@ export default function EnvelopePage() {
         </div>
 
         {/* Instruction Text */}
-        <div className="mt-6 sm:mt-8 flex flex-col items-center text-center transition-all duration-500 px-2">
+        <div className="mt-20 sm:mt-30 flex flex-col items-center text-center transition-all duration-500 px-2">
           <div
             className="inline-flex items-center gap-1.5 sm:gap-2 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white/80 border border-rose-200/70 shadow-[0_4px_16px_rgba(244,114,182,0.12)] backdrop-blur-xs transition-transform duration-300 hover:scale-105 cursor-pointer"
             onClick={() => !isOpen && openEnvelope()}
@@ -216,30 +217,17 @@ export default function EnvelopePage() {
             <span className="text-rose-500 text-xs sm:text-sm animate-pulse">
               🗝️
             </span>
-
             <p className="text-rose-500 text-xs sm:text-sm">
               {isOpen ? "Amplop sudah terbuka!" : "Buka kuncinya dulu ya!"}
             </p>
             <span className="text-rose-400 text-xs">✨</span>
           </div>
-          {isOpen && (
-            <button
-              type="button"
-              className="mt-2.5 sm:mt-3 text-[11px] sm:text-xs font-cute font-bold text-stone-500 hover:text-rose-600 underline underline-offset-4 decoration-rose-300 transition-colors cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                closeEnvelope();
-              }}
-            >
-              Kunci dan tutup kembali amplopnya 🔒
-            </button>
-          )}
         </div>
 
         {/* Next Page CTA */}
         {isOpen && (
           <div className="mt-5 sm:mt-7 transition-all duration-500 opacity-90">
-            <button
+            <button data-gsap-click
               onClick={() => navigate("/album")}
               className="group relative inline-flex items-center justify-center gap-2 sm:gap-2.5 px-5 py-2.5 sm:px-7 sm:py-3 rounded-full bg-white/95 text-stone-800 font-note font-bold text-sm sm:text-lg tracking-wide border border-rose-200/80 shadow-[0_8px_20px_-4px_rgba(244,114,182,0.25)] hover:shadow-[0_12px_28px_-4px_rgba(244,114,182,0.4)] hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
             >
@@ -254,6 +242,6 @@ export default function EnvelopePage() {
           </div>
         )}
       </div>
-    </section>
+    </motion.section>
   );
 }

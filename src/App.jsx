@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { useRef } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import Navigation from './components/Navigation'
 import EnvelopePage from './pages/EnvelopePage'
 import AlbumPage from './pages/AlbumPage'
@@ -27,13 +28,15 @@ function App() {
       <div ref={particleRef} id="particle-container" className="pointer-events-none fixed inset-0 z-50 overflow-hidden"></div>
 
       {/* Routes */}
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<EnvelopePage />} />
-        <Route path="/album" element={<AlbumPage />} />
-        <Route path="/game" element={<GamePage />} />
-        <Route path="/cake" element={<CakePage />} />
-        <Route path="/wishes" element={<WishesPage />} />
-      </Routes>
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<EnvelopePage />} />
+          <Route path="/album" element={<AlbumPage />} />
+          <Route path="/game" element={<GamePage />} />
+          <Route path="/cake" element={<CakePage />} />
+          <Route path="/wishes" element={<WishesPage />} />
+        </Routes>
+      </AnimatePresence>
     </div>
   )
 }

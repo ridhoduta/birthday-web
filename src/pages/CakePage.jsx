@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { createConfettiBurst } from '../utils/particles'
 import { useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { useGsapPageAnimation } from '../hooks/useGsapPageAnimation'
 
 export default function CakePage() {
+  const pageRef = useRef(null)
+  useGsapPageAnimation(pageRef)
   const [isBlown, setIsBlown] = useState(false)
   const navigate = useNavigate()
   const cakeRef = useRef(null)
@@ -54,7 +58,15 @@ export default function CakePage() {
   }, [isBlown])
 
   return (
-    <section className="min-h-screen w-full flex flex-col items-center justify-between sm:justify-center p-3 sm:p-6 md:p-8 relative select-none pt-12 sm:pt-16 pb-12 sm:pb-16">
+    <motion.section ref={pageRef}
+      className="min-h-screen w-full flex flex-col items-center justify-between sm:justify-center p-3 sm:p-6 md:p-8 relative select-none pt-12 sm:pt-16 pb-12 sm:pb-16"
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -24 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
+      <div data-gsap="curtain" className="absolute inset-0 z-50 origin-left bg-rose-100 pointer-events-none"></div>
+      <div data-gsap="click-wipe" className="absolute inset-x-0 top-0 h-1 z-50 bg-rose-400 pointer-events-none"></div>
       {/* Bunting Banner */}
       <div className="w-full max-w-4xl px-2 sm:px-4 pt-1 sm:pt-2 flex justify-center pointer-events-none select-none z-10">
         <svg className="w-full h-8 sm:h-12 md:h-14" fill="none" viewBox="0 0 600 48" xmlns="http://www.w3.org/2000/svg">
@@ -74,10 +86,10 @@ export default function CakePage() {
 
       {/* Title */}
       <div className="relative z-20 text-center max-w-2xl px-3 sm:px-4 mt-1 sm:mt-2">
-        <h2 className="font-sans text-2xl sm:text-4xl md:text-5xl text-primary tracking-tight font-extrabold drop-shadow-xs">
+        <h2 data-gsap="text" className="font-sans text-2xl sm:text-4xl md:text-5xl text-primary tracking-tight font-extrabold drop-shadow-xs">
           Selamat Ulang Tahun! <span className="text-secondary-fixed-dim inline-block animate-pulse">✨</span>
         </h2>
-        <p className="font-body text-sm sm:text-lg md:text-xl text-stone-600 mt-1 sm:mt-2 font-semibold leading-relaxed">
+        <p data-gsap="text" className="font-body text-sm sm:text-lg md:text-xl text-stone-600 mt-1 sm:mt-2 font-semibold leading-relaxed">
           &ldquo;Semoga setiap doa dan impian manismu terkabul seindah nyala lilin malam ini.&rdquo;
         </p>
       </div>
@@ -93,7 +105,6 @@ export default function CakePage() {
             <svg className="absolute top-20 left-0 w-36 h-28" fill="none" viewBox="0 0 100 80"><path d="M 32 0 Q 38 40 48 80" stroke="#dec0bc" strokeWidth="1.2" /><path d="M 68 8 Q 58 45 48 80" stroke="#dec0bc" strokeWidth="1.2" /><path d="M 44 24 Q 46 52 48 80" stroke="#dec0bc" strokeWidth="1.2" /></svg>
           </div>
           <div className="mt-2 rotate-[-5deg] bg-white p-3 rounded-lg shadow-md flex items-center gap-2">
-            <span className="text-amber-500">⭐</span><span className="font-sans text-xs font-bold text-stone-700">Make a Wish! 🌟</span>
           </div>
         </div>
 
@@ -106,21 +117,14 @@ export default function CakePage() {
             <svg className="absolute top-20 left-0 w-36 h-28" fill="none" viewBox="0 0 100 80"><path d="M 68 0 Q 60 40 52 80" stroke="#dec0bc" strokeWidth="1.2" /><path d="M 32 8 Q 42 45 52 80" stroke="#dec0bc" strokeWidth="1.2" /><path d="M 56 24 Q 54 52 52 80" stroke="#dec0bc" strokeWidth="1.2" /></svg>
           </div>
           <div className="mt-2 rotate-[4deg] bg-white p-3 rounded-lg shadow-md flex items-center gap-2">
-            <span className="text-rose-500">💖</span><span className="font-sans text-xs font-bold text-rose-600">Forever Loved 💖</span>
           </div>
         </div>
 
         {/* Interactive Cake */}
         <div className="relative flex flex-col items-center justify-center my-2 sm:my-3 z-20 w-full">
-          <div
-            className={`transition-all duration-300 transform mb-3 sm:mb-4 px-4 py-1.5 rounded-full font-sans text-xs sm:text-sm font-bold shadow-xs flex items-center gap-2 cursor-pointer select-none hover:scale-105 text-center max-w-[95%] sm:max-w-none ${isBlown ? 'bg-teal-200 text-teal-950' : 'bg-amber-200 text-amber-950'}`}
-            onClick={blowCandles}
-          >
-            <span className="material-symbols-outlined text-[16px] sm:text-[18px] shrink-0">{isBlown ? 'check_circle' : 'magic_button'}</span>
-            <span className="truncate sm:whitespace-normal">{isBlown ? 'Permohonan terkirim! Klik lagi untuk menyalakan ✨' : 'Ketuk lilin untuk tiup & buat permohonan! 🕯️'}</span>
-          </div>
+        
 
-          <div ref={cakeRef} className="relative cursor-pointer select-none group flex justify-center w-full" title="Klik untuk meniup lilin!" onClick={blowCandles}>
+          <div ref={cakeRef} data-gsap="image" className="relative cursor-pointer select-none group flex justify-center w-full" title="Klik untuk meniup lilin!" onClick={blowCandles}>
             <div className={`absolute -top-6 left-1/2 -translate-x-1/2 w-56 sm:w-72 h-40 sm:h-52 bg-amber-200/40 rounded-full blur-3xl pointer-events-none transition-opacity duration-700 ${isBlown ? 'opacity-5' : ''}`}></div>
             <svg className="w-[320px] xs:w-[360px] sm:w-[440px] md:w-[480px] max-w-[94vw] h-auto drop-shadow-[0_16px_28px_rgba(166,57,52,0.16)] transition-transform duration-300 group-hover:scale-[1.02]" fill="none" viewBox="0 0 380 340" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -186,11 +190,8 @@ export default function CakePage() {
 
         {/* Wish Banner */}
         <div className={`mt-3 sm:mt-4 max-w-md w-full bg-white p-3.5 sm:p-5 rounded-2xl shadow-xl text-center border border-rose-200 transition-all duration-500 ${isBlown ? 'opacity-100 scale-100 block' : 'opacity-0 scale-95 hidden pointer-events-none'}`}>
-          <div className="inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-amber-200 text-amber-900 mb-1 sm:mb-1.5 shadow-xs">
-            <span className="material-symbols-outlined text-[20px] sm:text-[24px]">celebration</span>
-          </div>
-          <h3 className="font-sans font-bold text-base sm:text-lg text-rose-600">Permohonanmu Telah Diterbangkan! ✨</h3>
-          <p className="font-body text-xs sm:text-sm text-stone-600 mt-0.5 sm:mt-1">Lilin padam, jutaan berkah menyala. Semoga setiap impian manis terwujud dengan indah.</p>
+          <h3 className="font-sans font-bold text-base sm:text-lg text-rose-600">Selamat Ulang Tahun ke 22</h3>
+
         </div>
 
         {/* Action Buttons */}
@@ -198,6 +199,7 @@ export default function CakePage() {
           <button
             type="button"
             onClick={blowCandles}
+            data-gsap-click
             className="w-full sm:w-auto px-6 py-3 rounded-full bg-amber-200 hover:bg-amber-300 text-amber-950 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer"
           >
             <span className="material-symbols-outlined text-[18px] sm:text-[20px]">{isBlown ? 'restart_alt' : 'mode_fan'}</span>
@@ -207,6 +209,7 @@ export default function CakePage() {
           <button
             type="button"
             onClick={() => navigate('/wishes')}
+            data-gsap-click
             className="w-full sm:w-auto px-7 py-3 rounded-full bg-gradient-to-r from-coral-400 via-rose-500 to-rose-400 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_8px_20px_-4px_rgba(244,63,94,0.4)] hover:shadow-[0_12px_25px_-4px_rgba(244,63,94,0.55)] hover:scale-105 active:scale-95 transition-all cursor-pointer"
           >
             <span>💐 Selanjutnya</span>
@@ -216,6 +219,6 @@ export default function CakePage() {
           </button>
         </div>
       </div>
-    </section>
+    </motion.section>
   )
 }
