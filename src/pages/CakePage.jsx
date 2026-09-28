@@ -3,11 +3,14 @@ import { createConfettiBurst } from '../utils/particles'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useGsapPageAnimation } from '../hooks/useGsapPageAnimation'
+import { useGsapTyping } from '../hooks/useGsapTyping'
+import cakeSvg from '../../birthday-cake-cake-svgrepo-com.svg'
 
 export default function CakePage() {
   const pageRef = useRef(null)
   useGsapPageAnimation(pageRef)
   const [isBlown, setIsBlown] = useState(false)
+  useGsapTyping(pageRef, { active: isBlown, selector: '[data-gsap-typing="birthday"]', speed: 0.06 })
   const navigate = useNavigate()
   const cakeRef = useRef(null)
   const flickerRef = useRef(null)
@@ -126,7 +129,13 @@ export default function CakePage() {
 
           <div ref={cakeRef} data-gsap="image" className="relative cursor-pointer select-none group flex justify-center w-full" title="Klik untuk meniup lilin!" onClick={blowCandles}>
             <div className={`absolute -top-6 left-1/2 -translate-x-1/2 w-56 sm:w-72 h-40 sm:h-52 bg-amber-200/40 rounded-full blur-3xl pointer-events-none transition-opacity duration-700 ${isBlown ? 'opacity-5' : ''}`}></div>
-            <svg className="w-[320px] xs:w-[360px] sm:w-[440px] md:w-[480px] max-w-[94vw] h-auto drop-shadow-[0_16px_28px_rgba(166,57,52,0.16)] transition-transform duration-300 group-hover:scale-[1.02]" fill="none" viewBox="0 0 380 340" xmlns="http://www.w3.org/2000/svg">
+            <img src={cakeSvg} alt="Kue ulang tahun" className="w-[300px] xs:w-[340px] sm:w-[420px] md:w-[460px] max-w-[92vw] h-auto object-contain drop-shadow-[0_16px_28px_rgba(166,57,52,0.16)] transition-transform duration-300 group-hover:scale-[1.02]" />
+            <div className="absolute inset-0 pointer-events-none mx-auto w-[300px] xs:w-[340px] sm:w-[420px] md:w-[460px] max-w-[92vw]">
+              <div ref={flame1Ref} className="absolute left-[31%] top-[4%] w-3 h-6 sm:w-4 sm:h-8 rounded-[55%_45%_55%_45%] bg-gradient-to-t from-rose-500 via-amber-300 to-white shadow-[0_0_14px_5px_rgba(255,190,70,0.55)] origin-bottom transition-all duration-300" />
+              <div ref={flame2Ref} className="absolute left-[48%] top-[1%] w-3.5 h-7 sm:w-5 sm:h-10 rounded-[55%_45%_55%_45%] bg-gradient-to-t from-rose-500 via-amber-300 to-white shadow-[0_0_16px_6px_rgba(255,190,70,0.6)] origin-bottom transition-all duration-300" />
+              <div ref={flame3Ref} className="absolute left-[65%] top-[4%] w-3 h-6 sm:w-4 sm:h-8 rounded-[55%_45%_55%_45%] bg-gradient-to-t from-rose-500 via-amber-300 to-white shadow-[0_0_14px_5px_rgba(255,190,70,0.55)] origin-bottom transition-all duration-300" />
+            </div>
+            <svg className="hidden" fill="none" viewBox="0 0 380 340" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="tier1Grad" x1="0%" x2="0%" y1="0%" y2="100%"><stop offset="0%" stopColor="#ffffff" /><stop offset="60%" stopColor="#fff4ef" /><stop offset="100%" stopColor="#fae2db" /></linearGradient>
                 <linearGradient id="tier2Grad" x1="0%" x2="0%" y1="0%" y2="100%"><stop offset="0%" stopColor="#ffffff" /><stop offset="70%" stopColor="#fff6f0" /><stop offset="100%" stopColor="#feded7" /></linearGradient>
@@ -169,13 +178,13 @@ export default function CakePage() {
               <line stroke="#036a5f" strokeWidth="1.8" x1="222" x2="230" y1="88" y2="84" /><line stroke="#036a5f" strokeWidth="1.8" x1="222" x2="230" y1="98" y2="94" /><line stroke="#036a5f" strokeWidth="1.8" x1="222" x2="230" y1="108" y2="104" />
               <line stroke="#57423f" strokeWidth="1.5" x1="226" x2="226" y1="80" y2="72" />
               {/* Flames */}
-              <g ref={flame1Ref} className="transition-all duration-300 origin-bottom" style={{ transformOrigin: '154px 72px' }}>
+              <g className="transition-all duration-300 origin-bottom" style={{ transformOrigin: '154px 72px' }}>
                 <circle cx="154" cy="62" fill="#ffd167" opacity="0.35" r="14" /><path d="M 154 50 C 158 58, 160 64, 154 72 C 148 64, 150 58, 154 50 Z" fill="url(#flameGrad)" /><circle cx="154" cy="66" fill="#ffffff" r="2.5" />
               </g>
-              <g ref={flame2Ref} className="transition-all duration-300 origin-bottom" style={{ transformOrigin: '190px 62px' }}>
+              <g className="transition-all duration-300 origin-bottom" style={{ transformOrigin: '190px 62px' }}>
                 <circle cx="190" cy="52" fill="#ffd167" opacity="0.4" r="16" /><path d="M 190 38 C 195 48, 197 54, 190 62 C 183 54, 185 48, 190 38 Z" fill="url(#flameGrad)" /><circle cx="190" cy="55" fill="#ffffff" r="3" />
               </g>
-              <g ref={flame3Ref} className="transition-all duration-300 origin-bottom" style={{ transformOrigin: '226px 72px' }}>
+              <g className="transition-all duration-300 origin-bottom" style={{ transformOrigin: '226px 72px' }}>
                 <circle cx="226" cy="62" fill="#ffd167" opacity="0.35" r="14" /><path d="M 226 50 C 230 58, 232 64, 226 72 C 220 64, 222 58, 226 50 Z" fill="url(#flameGrad)" /><circle cx="226" cy="66" fill="#ffffff" r="2.5" />
               </g>
               {/* Smoke */}
@@ -190,7 +199,7 @@ export default function CakePage() {
 
         {/* Wish Banner */}
         <div className={`mt-3 sm:mt-4 max-w-md w-full bg-white p-3.5 sm:p-5 rounded-2xl shadow-xl text-center border border-rose-200 transition-all duration-500 ${isBlown ? 'opacity-100 scale-100 block' : 'opacity-0 scale-95 hidden pointer-events-none'}`}>
-          <h3 className="font-sans font-bold text-base sm:text-lg text-rose-600">Selamat Ulang Tahun ke 22</h3>
+          <h3 data-gsap-typing="birthday" className="font-sans font-bold text-base sm:text-lg text-rose-600">Selamat Ulang Tahun ke 22 sayanggggg!!!!</h3>
 
         </div>
 

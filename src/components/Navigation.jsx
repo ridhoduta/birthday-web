@@ -1,5 +1,4 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
 
 const navItems = [
   { path: '/', label: '1. Amplop', icon: '💌' },
@@ -9,74 +8,43 @@ const navItems = [
   { path: '/wishes', label: '5. Doa', icon: '💐' },
 ]
 
-const MELODY_NOTES = [
-  { f: 264, d: 0.35 }, { f: 264, d: 0.25 }, { f: 297, d: 0.6 }, { f: 264, d: 0.6 }, { f: 352, d: 0.6 }, { f: 330, d: 1.1 },
-  { f: 264, d: 0.35 }, { f: 264, d: 0.25 }, { f: 297, d: 0.6 }, { f: 264, d: 0.6 }, { f: 396, d: 0.6 }, { f: 352, d: 1.1 },
-  { f: 264, d: 0.35 }, { f: 264, d: 0.25 }, { f: 528, d: 0.6 }, { f: 440, d: 0.6 }, { f: 352, d: 0.6 }, { f: 330, d: 0.6 }, { f: 297, d: 0.6 },
-  { f: 466, d: 0.35 }, { f: 466, d: 0.25 }, { f: 440, d: 0.6 }, { f: 352, d: 0.6 }, { f: 396, d: 0.6 }, { f: 352, d: 1.2 }
-]
-
 export default function Navigation() {
-  const location = useLocation()
   const [isPlaying, setIsPlaying] = useState(false)
-  const audioCtxRef = useRef(null)
-  const timerRef = useRef(null)
-  const isPlayingRef = useRef(false)
+  const audioRef = useRef(null)
 
-  const playMelody = useCallback(() => {
-    let index = 0
+  useEffect(() => {
+    const audio = new Audio('/audio/audio.mp3')
+    audio.loop = true
+    audio.volume = 0.35
+    audioRef.current = audio
 
-    function playNextNote() {
-      if (!isPlayingRef.current) return
-      const note = MELODY_NOTES[index]
-      const ctx = audioCtxRef.current
-
-      if (ctx) {
-        const osc = ctx.createOscillator()
-        const gain = ctx.createGain()
-
-        osc.type = 'sine'
-        osc.frequency.setValueAtTime(note.f, ctx.currentTime)
-        gain.gain.setValueAtTime(0.08, ctx.currentTime)
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + note.d - 0.05)
-
-        osc.connect(gain)
-        gain.connect(ctx.destination)
-        osc.start()
-        osc.stop(ctx.currentTime + note.d)
-      }
-
-      index = (index + 1) % MELODY_NOTES.length
-      timerRef.current = setTimeout(playNextNote, note.d * 1000)
+    const playAudio = () => {
+      audio.play()
+        .then(() => setIsPlaying(true))
+        .catch(() => setIsPlaying(false))
     }
 
-    playNextNote()
+    window.addEventListener('birthday-audio-play', playAudio)
+
+    return () => {
+      window.removeEventListener('birthday-audio-play', playAudio)
+      audio.pause()
+      audio.currentTime = 0
+      audioRef.current = null
+    }
   }, [])
 
   const toggleMusic = useCallback(() => {
-    if (!audioCtxRef.current) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext
-      audioCtxRef.current = new AudioContext()
-    }
+    const audio = audioRef.current
+    if (!audio) return
 
-    if (!isPlayingRef.current) {
-      isPlayingRef.current = true
-      setIsPlaying(true)
-      if (audioCtxRef.current.state === 'suspended') {
-        audioCtxRef.current.resume()
-      }
-      playMelody()
+    if (audio.paused) {
+      audio.play()
+        .then(() => setIsPlaying(true))
+        .catch(() => setIsPlaying(false))
     } else {
-      isPlayingRef.current = false
+      audio.pause()
       setIsPlaying(false)
-      clearTimeout(timerRef.current)
-    }
-  }, [playMelody])
-
-  useEffect(() => {
-    return () => {
-      isPlayingRef.current = false
-      clearTimeout(timerRef.current)
     }
   }, [])
 

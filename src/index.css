@@ -100,6 +100,55 @@
   50% { transform: scale(1.09); }
 }
 
+/* Gentle independent movement keeps the bouquet alive without looking mechanical. */
+.bouquet-stems {
+  transform-origin: 160px 330px;
+  animation: bouquet-sway 5s ease-in-out infinite;
+}
+
+.bouquet-leaves {
+  transform-origin: 160px 300px;
+  animation: bouquet-sway 4.5s ease-in-out infinite reverse;
+}
+
+.bouquet-flower {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.flower-one { animation: flower-sway-one 4.2s ease-in-out infinite; }
+.flower-two { animation: flower-sway-two 5.1s ease-in-out infinite; }
+.flower-three { animation: flower-sway-three 4.7s ease-in-out infinite; }
+.flower-four { animation: flower-sway-one 5.4s ease-in-out infinite reverse; }
+
+@keyframes bouquet-sway {
+  0%, 100% { transform: rotate(-1deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes flower-sway-one {
+  0%, 100% { transform: translate(92px, 100px) rotate(-2deg); }
+  50% { transform: translate(92px, 100px) rotate(4deg) translateY(-2px); }
+}
+
+@keyframes flower-sway-two {
+  0%, 100% { transform: translate(160px, 70px) rotate(2deg); }
+  50% { transform: translate(160px, 70px) rotate(-4deg) translateY(-3px); }
+}
+
+@keyframes flower-sway-three {
+  0%, 100% { transform: translate(236px, 108px) rotate(-3deg); }
+  50% { transform: translate(236px, 108px) rotate(3deg) translateY(-2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bouquet-stems,
+  .bouquet-leaves,
+  .bouquet-flower {
+    animation: none;
+  }
+}
+
 @keyframes float-particle {
   0% {
     opacity: 0;

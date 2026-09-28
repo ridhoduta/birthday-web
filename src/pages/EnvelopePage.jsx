@@ -19,6 +19,7 @@ export default function EnvelopePage() {
   const openEnvelope = useCallback(() => {
     if (isOpen) return;
     setIsOpen(true);
+    window.dispatchEvent(new Event('birthday-audio-play'));
     if (lockBtnRef.current) {
       const rect = lockBtnRef.current.getBoundingClientRect();
       const container = document.getElementById("particle-container");

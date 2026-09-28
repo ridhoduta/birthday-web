@@ -38,9 +38,49 @@ export default function WishesPage() {
         <section className="w-full flex flex-col items-center relative mb-8">
           <div className="relative w-full max-w-sm sm:max-w-md bg-white p-3 sm:p-4 rounded-2xl paper-card border border-cream-200 transition-all duration-300 hover:shadow-xl group">
             <div aria-hidden="true" className="washi-tape-top"></div>
-            <div className="relative overflow-hidden rounded-xl bg-cream-50 aspect-[4/5] flex items-center justify-center border border-cream-100">
-              <img data-gsap="image parallax" src={data.bouquetImage} alt="Buket Bunga Cantik Ulang Tahun" className="w-full h-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-500 ease-out" />
-            </div>
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-b from-rose-50 via-amber-50 to-orange-50 aspect-[4/5] flex items-center justify-center border border-cream-100">
+                <svg data-gsap="image parallax" viewBox="0 0 320 400" role="img" aria-label="Buket bunga cantik" className="bouquet-svg w-full h-full p-5 transition-transform duration-500 group-hover:scale-[1.02]">
+                  <defs>
+                    <linearGradient id="bouquetPaper" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0" stopColor="#f8b4c8" />
+                      <stop offset="1" stopColor="#d8799e" />
+                    </linearGradient>
+                    <linearGradient id="bouquetStem" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0" stopColor="#4f9b72" />
+                      <stop offset="1" stopColor="#9acb86" />
+                    </linearGradient>
+                  </defs>
+                  <ellipse cx="160" cy="370" rx="92" ry="13" fill="#d99b9b" opacity=".22" />
+                  <g className="bouquet-stems" fill="none" stroke="url(#bouquetStem)" strokeLinecap="round" strokeWidth="6">
+                    <path d="M160 330 Q145 220 92 104" />
+                    <path d="M160 330 Q165 205 160 74" />
+                    <path d="M160 330 Q190 205 236 112" />
+                    <path d="M160 330 Q125 235 48 170" />
+                    <path d="M160 330 Q205 245 275 190" />
+                  </g>
+                  <g className="bouquet-leaves" fill="#73b77c">
+                    <ellipse cx="106" cy="235" rx="35" ry="13" transform="rotate(32 106 235)" />
+                    <ellipse cx="213" cy="235" rx="37" ry="13" transform="rotate(-34 213 235)" />
+                    <ellipse cx="82" cy="272" rx="31" ry="12" transform="rotate(-28 82 272)" />
+                    <ellipse cx="241" cy="273" rx="31" ry="12" transform="rotate(28 241 273)" />
+                  </g>
+                  <g className="bouquet-flower flower-one" transform="translate(92 100)">
+                    <circle r="32" fill="#f39ab3" /><circle cx="-23" cy="8" r="22" fill="#ffb6c7" /><circle cx="23" cy="8" r="22" fill="#e980a2" /><circle cy="-19" r="22" fill="#ffcada" /><circle cy="18" r="12" fill="#ffd36e" />
+                  </g>
+                  <g className="bouquet-flower flower-two" transform="translate(160 70)">
+                    <circle r="34" fill="#ffd166" /><circle cx="-22" cy="8" r="23" fill="#f5b94e" /><circle cx="22" cy="8" r="23" fill="#ffe29a" /><circle cy="-20" r="23" fill="#ffdc7f" /><circle cy="18" r="12" fill="#f28d68" />
+                  </g>
+                  <g className="bouquet-flower flower-three" transform="translate(236 108)">
+                    <circle r="32" fill="#c89de8" /><circle cx="-23" cy="8" r="22" fill="#b985dc" /><circle cx="23" cy="8" r="22" fill="#dcb8f0" /><circle cy="-19" r="22" fill="#e6c9f5" /><circle cy="18" r="12" fill="#ffd166" />
+                  </g>
+                  <g className="bouquet-flower flower-four" transform="translate(48 170)">
+                    <circle r="27" fill="#ff9f9f" /><circle cx="-19" cy="7" r="18" fill="#ffb8b8" /><circle cx="19" cy="7" r="18" fill="#f27f8c" /><circle cy="-16" r="18" fill="#ffc6c6" /><circle cy="14" r="10" fill="#ffd166" />
+                  </g>
+                  <path d="M55 275 L265 275 L232 365 Q160 385 88 365 Z" fill="url(#bouquetPaper)" opacity=".96" />
+                  <path d="M55 275 Q160 305 265 275" fill="none" stroke="#f8d6df" strokeWidth="4" opacity=".8" />
+                  <path d="M160 304 L160 372" stroke="#b95e83" strokeWidth="5" opacity=".55" />
+                </svg>
+              </div>
             <div className="pt-3 pb-1 text-center">
               <p className="font-handwriting text-xl text-stone-600 tracking-wide">dirangkai dengan doa terbaik &amp; kehangatan</p>
             </div>

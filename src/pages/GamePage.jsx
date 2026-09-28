@@ -1,16 +1,19 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { spawnParticles } from '../utils/particles'
+import content from '../data/content.json'
 import { motion } from 'framer-motion'
 import { useGsapPageAnimation } from '../hooks/useGsapPageAnimation'
 
+const images = content.image
+
 const CARD_DATA = [
-  { id: 1, icon: '🎂', title: 'Kue Tart Cokelat', tag: 'Kue Ulang Tahun', tapeColor: 'washi-tape-pink', bgFront: 'bg-[#fffaf0]', borderColor: 'border-amber-300/80', accentColor: 'text-amber-700' },
-  { id: 1, icon: '🎂', title: 'Kue Tart Cokelat', tag: 'Kue Ulang Tahun', tapeColor: 'washi-tape-pink', bgFront: 'bg-[#fffaf0]', borderColor: 'border-amber-300/80', accentColor: 'text-amber-700' },
-  { id: 2, icon: '💖', title: 'Cinta', tag: 'Harapan Manis', tapeColor: 'washi-tape-mint', bgFront: 'bg-[#fff5f6]', borderColor: 'border-rose-300/80', accentColor: 'text-rose-600' },
-  { id: 2, icon: '💖', title: 'Cinta', tag: 'Harapan Manis', tapeColor: 'washi-tape-mint', bgFront: 'bg-[#fff5f6]', borderColor: 'border-rose-300/80', accentColor: 'text-rose-600' },
-  { id: 3, icon: '🍰', title: 'Kue Strawberry', tag: 'Penuh Manisan', tapeColor: 'washi-tape-cream', bgFront: 'bg-[#fff8f2]', borderColor: 'border-pink-300/80', accentColor: 'text-pink-600' },
-  { id: 3, icon: '🍰', title: 'Kue Strawberry', tag: 'Penuh Manisan', tapeColor: 'washi-tape-cream', bgFront: 'bg-[#fff8f2]', borderColor: 'border-pink-300/80', accentColor: 'text-pink-600' },
+  { id: 1, image: images.image1, tapeColor: 'washi-tape-pink', bgFront: 'bg-[#fffaf0]', borderColor: 'border-amber-300/80', accentColor: 'text-amber-700' },
+  { id: 1, image: images.image1, tapeColor: 'washi-tape-pink', bgFront: 'bg-[#fffaf0]', borderColor: 'border-amber-300/80', accentColor: 'text-amber-700' },
+  { id: 2, image: images.image2, tapeColor: 'washi-tape-mint', bgFront: 'bg-[#fff5f6]', borderColor: 'border-rose-300/80', accentColor: 'text-rose-600' },
+  { id: 2, image: images.image2, tapeColor: 'washi-tape-mint', bgFront: 'bg-[#fff5f6]', borderColor: 'border-rose-300/80', accentColor: 'text-rose-600' },
+  { id: 3, image: images.image3, tapeColor: 'washi-tape-cream', bgFront: 'bg-[#fff8f2]', borderColor: 'border-pink-300/80', accentColor: 'text-pink-600' },
+  { id: 3, image: images.image3, tapeColor: 'washi-tape-cream', bgFront: 'bg-[#fff8f2]', borderColor: 'border-pink-300/80', accentColor: 'text-pink-600' },
 ]
 
 function shuffle(arr) {
@@ -32,6 +35,12 @@ export default function GamePage() {
   const [moves, setMoves] = useState(0)
   const [lockBoard, setLockBoard] = useState(false)
   const [showWin, setShowWin] = useState(false)
+  const [isPreviewing, setIsPreviewing] = useState(true)
+
+  useEffect(() => {
+    const previewTimer = setTimeout(() => setIsPreviewing(false), 2200)
+    return () => clearTimeout(previewTimer)
+  }, [])
 
   const resetGame = useCallback(() => {
     setCards(shuffle(CARD_DATA))
@@ -40,6 +49,7 @@ export default function GamePage() {
     setMoves(0)
     setLockBoard(false)
     setShowWin(false)
+    setIsPreviewing(true)
   }, [])
 
   const flipCard = useCallback((e, uniqueKey) => {
@@ -47,7 +57,7 @@ export default function GamePage() {
       e.preventDefault()
       e.stopPropagation()
     }
-    if (lockBoard) return
+    if (lockBoard || isPreviewing) return
     if (flipped.includes(uniqueKey)) return
     if (matched.includes(uniqueKey)) return
 
@@ -86,7 +96,7 @@ export default function GamePage() {
         }, 900)
       }
     }
-  }, [lockBoard, flipped, matched, cards])
+  }, [lockBoard, isPreviewing, flipped, matched, cards])
 
   return (
     <motion.section ref={pageRef}
@@ -98,7 +108,7 @@ export default function GamePage() {
     >
       <div data-gsap="curtain" className="absolute inset-0 z-50 origin-left bg-rose-100 pointer-events-none"></div>
       <div data-gsap="click-wipe" className="absolute inset-x-0 top-0 h-1 z-50 bg-rose-400 pointer-events-none"></div>
-      <header className="flex flex-col items-center mb-3 sm:mb-4 text-center z-10 shrink-0">
+      <header className="flex flex-col items-center sm:mb-1 text-center shrink-0">
         <h2 data-gsap="text" className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-stone-800 tracking-tight flex items-center justify-center gap-2 font-sans">
           Cocokkan Kartu
         </h2>
@@ -110,14 +120,11 @@ export default function GamePage() {
       <main className="w-full max-w-3xl flex flex-col items-center z-10 px-0.5 sm:px-2">
         <div className="w-full flex items-center justify-between gap-1.5 sm:gap-2 mb-3 sm:mb-5 px-0.5 font-sans text-xs sm:text-sm">
           <div className="flex items-center gap-1.5 sm:gap-2.5">
-            <div className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full bg-white/90 border border-stone-200/90 font-medium text-stone-600 shadow-xs backdrop-blur-sm text-[11px] sm:text-xs md:text-sm whitespace-nowrap">
-              <span>👆</span><span>Langkah: <strong className="text-stone-800 font-bold">{moves}</strong></span>
-            </div>
             <div className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full bg-rose-50/95 border border-rose-200/90 font-medium text-rose-700 shadow-xs backdrop-blur-sm text-[11px] sm:text-xs md:text-sm whitespace-nowrap">
               <span>💕</span><span>Pasangan: <strong className="font-bold text-rose-800">{matched.length / 2}</strong>/3</span>
             </div>
           </div>
-          <button
+          {/* <button
             type="button"
             onClick={resetGame}
             className="group flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs text-stone-600 hover:text-rose-600 transition-all font-semibold px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-white/90 hover:bg-white border border-stone-200 shadow-2xs backdrop-blur-sm active:scale-95 cursor-pointer whitespace-nowrap shrink-0"
@@ -126,12 +133,12 @@ export default function GamePage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
             <span>Acak Ulang</span>
-          </button>
+          </button> */}
         </div>
 
         <div className="w-full grid grid-cols-3 gap-2 sm:gap-5 md:gap-7">
           {cards.map((item) => {
-            const isFlipped = flipped.includes(item.uniqueKey) || matched.includes(item.uniqueKey)
+             const isFlipped = isPreviewing || flipped.includes(item.uniqueKey) || matched.includes(item.uniqueKey)
             const isMatched = matched.includes(item.uniqueKey)
             return (
               <div
@@ -165,9 +172,7 @@ export default function GamePage() {
                   <div className={`absolute inset-0 w-full h-full backface-hidden rotate-y-180 rounded-xl sm:rounded-2xl paper-cardstock ${item.bgFront} border-2 ${item.borderColor} p-1.5 sm:p-4 flex flex-col items-center justify-between overflow-hidden ${isMatched ? 'ring-2 sm:ring-4 ring-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.3)]' : ''}`}>
                     <div className={`absolute -top-1 sm:-top-1.5 left-1/2 -translate-x-1/2 w-12 sm:w-20 h-3.5 sm:h-5 ${item.tapeColor} rotate-1 z-20 opacity-90`}></div>
                     <div className="w-full h-full rounded-lg sm:rounded-xl embossed-border flex flex-col items-center justify-center p-1 sm:p-2 relative">
-                      <span className="text-2xl sm:text-4xl md:text-5xl mb-0.5 sm:mb-1.5 filter drop-shadow-[0_3px_5px_rgba(0,0,0,0.12)]">{item.icon}</span>
-                      <h3 className="text-[10px] sm:text-sm md:text-base font-bold text-stone-800 text-center font-sans leading-tight">{item.title}</h3>
-                      <span className={`text-[8px] sm:text-xs font-handwriting font-bold ${item.accentColor} mt-0 sm:mt-0.5`}>{item.tag}</span>
+                      <img src={item.image} alt="Kartu kenangan" className="w-full h-20 sm:h-28 md:h-32 rounded-lg object-cover filter drop-shadow-[0_3px_5px_rgba(0,0,0,0.12)]" />
                     </div>
                   </div>
                 </div>
@@ -178,7 +183,7 @@ export default function GamePage() {
 
         {/* Win Banner without layout jump */}
         <div className={`w-full mt-3 sm:mt-5 p-3 sm:p-4 rounded-2xl bg-white/95 border-2 border-rose-300 text-center shadow-lg transition-all duration-500 ${showWin ? 'opacity-100 scale-100 animate-bounce block' : 'opacity-0 scale-95 hidden pointer-events-none'}`}>
-          <p className="font-handwriting text-lg sm:text-2xl md:text-3xl font-bold text-rose-600">🎉 Horeee! Ingatanmu luar biasa manis! Pasangan kue &amp; cinta telah lengkap! 🎂💖</p>
+          <p className="font-handwriting text-lg sm:text-2xl md:text-3xl font-bold text-rose-600">🎉 Horeee! Berhasil</p>
         </div>
       </main>
 
@@ -189,13 +194,13 @@ export default function GamePage() {
           data-gsap-click
           className="group inline-flex items-center justify-center gap-2 sm:gap-3 w-full sm:w-auto px-5 sm:px-8 py-3 sm:py-3.5 rounded-full bg-gradient-to-r from-coral-400 via-rose-500 to-rose-400 text-white font-bold text-sm sm:text-base shadow-[0_10px_25px_-5px_rgba(244,63,94,0.45)] hover:shadow-[0_15px_30px_-5px_rgba(244,63,94,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 font-sans cursor-pointer"
         >
-          <span className="text-lg sm:text-xl group-hover:scale-125 transition-transform">🎂</span>
-          <span>Lanjut ke Kue Ulang Tahun &amp; Tiup Lilin</span>
+          {/* <span className="text-lg sm:text-xl group-hover:scale-125 transition-transform">🎂</span> */}
+          <span>Selanjutnya</span>
           <svg className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>
         </button>
-        <p className="text-stone-500 font-handwriting text-sm sm:text-lg mt-0.5 px-2">Kue tart spesial sudah menunggu untuk ditiup bersama ✨</p>
+        {/* <p className="text-stone-500 font-handwriting text-sm sm:text-lg mt-0.5 px-2">Kue tart spesial sudah menunggu untuk ditiup bersama ✨</p> */}
       </div>
     </motion.section>
   )

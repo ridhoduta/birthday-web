@@ -3,8 +3,10 @@ import { motion } from 'framer-motion'
 import { useRef, useState } from 'react'
 import content from '../data/content.json'
 import { useGsapPageAnimation } from '../hooks/useGsapPageAnimation'
+import cakeSvg from '../../birthday-cake-cake-svgrepo-com.svg'
 
 const data = content.pages.album
+const images = content.image  
 
 export default function AlbumPage() {
   const pageRef = useRef(null)
@@ -53,9 +55,9 @@ export default function AlbumPage() {
           {/* PAGE 1 (Left cover page) */}
           <label htmlFor="page-1" className="book__page book__page--1 relative group cursor-pointer select-none">
             <img src={data.coverImage} alt="Sampul Album" className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/30 flex flex-col justify-between p-4 sm:p-7">
+            <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/35 to-black/30 flex flex-col justify-between p-4 sm:p-7">
               <div className="flex items-center justify-between">
-                <div className="text-base sm:text-2xl">✨</div>
+                {/* <div className="text-base sm:text-2xl">✨</div> */}
               </div>
               <div>
                 <p className="font-handwriting text-white text-xl sm:text-3xl md:text-4xl font-bold leading-tight drop-shadow-md">
@@ -76,41 +78,25 @@ export default function AlbumPage() {
                 
               </div>
 
-              {/* Two Mini Polaroids */}
-              <div className="grid grid-cols-2 gap-2 sm:gap-3 mt-1 sm:mt-2">
+              {/* Polaroids stacked vertically */}
+              <div className="flex flex-col items-center gap-3 sm:gap-4 mt-1 sm:mt-2">
                 {data.innerPage.photos.map((photo, idx) => (
                   <div data-gsap="stagger"
                     key={idx}
-                    className={`polaroid-frame bg-white p-1.5 sm:p-2 pb-2 sm:pb-2.5 rounded border border-stone-200 ${photo.rotation} relative cursor-pointer group`}
+                    className={`polaroid-frame bg-white p-1.5 sm:p-2 pb-2 sm:pb-2.5 rounded border border-stone-200 w-full max-w-47.5 sm:max-w-65 ${photo.rotation} relative cursor-pointer group`}
                     onClick={(e) => {
                       e.stopPropagation()
                       openPhoto(photo.imageUrlFull, photo.caption)
                     }}
                   >
                     <div className={`absolute -top-1.5 left-1/2 -translate-x-1/2 w-10 sm:w-12 h-3 sm:h-3.5 ${photo.tapeColor} rounded ${idx === 0 ? '-rotate-2' : 'rotate-2'}`}></div>
-                    <div className="w-full h-20 sm:h-28 md:h-32 rounded-xs overflow-hidden bg-stone-100">
+                    <div className="w-full h-28 sm:h-36 md:h-40 rounded-xs overflow-hidden bg-stone-100">
                       <img src={photo.imageUrl} alt={photo.caption} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     </div>
                     <p className="font-handwriting text-[10px] sm:text-sm text-[#3d2720] text-center mt-1 sm:mt-1.5 leading-tight font-bold">{photo.caption}</p>
                     <p className="text-[7px] sm:text-[10px] text-stone-400 text-center mt-0.5 leading-tight">{photo.subcaption}</p>
                   </div>
                 ))}
-              </div>
-
-              {/* Sticky Note */}
-              <div className="p-2 sm:p-4 bg-[#fefce8] rounded-lg border border-amber-200/80 shadow-xs relative mt-1 sm:mt-2">
-                <div className="absolute -top-2 right-4 sm:right-5 w-8 sm:w-10 h-2.5 sm:h-3 bg-amber-300/70 -rotate-3"></div>
-                <div className="flex items-start gap-1.5 sm:gap-2">
-                  <div className="text-sm sm:text-xl">💌</div>
-                  <div>
-                    <p className="font-handwriting text-[10px] sm:text-sm text-amber-950 font-bold leading-snug">
-                      &ldquo;Semua halaman ini adalah bukti betapa berharganya kamu bagi orang-orang tersayang!&rdquo;
-                    </p>
-                    <p className="mt-1 text-[7px] sm:text-[10px] text-amber-800 font-medium leading-tight">
-                      — Tertanda dengan segenap cinta 💖✨
-                    </p>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -133,8 +119,8 @@ export default function AlbumPage() {
               </div>
 
               <div className="flex flex-col items-center text-center my-auto py-2 sm:py-3">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-rose-100 to-amber-100 border-2 border-rose-200 flex items-center justify-center text-2xl sm:text-4xl shadow-md mb-2 sm:mb-3">
-                  🎂
+                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-linear-to-br from-rose-100 to-amber-100 border-2 border-rose-200 flex items-center justify-center shadow-md mb-2 sm:mb-3 overflow-hidden">
+                  <img src={cakeSvg} alt="Kue ulang tahun" className="w-10 h-10 sm:w-14 sm:h-14 object-contain" />
                 </div>
                 <h3 className="font-serif font-bold text-base sm:text-2xl text-rose-950 mb-1 leading-tight">
                   {data.frontPage.heading}
@@ -158,7 +144,7 @@ export default function AlbumPage() {
                 <div className="flex items-center justify-between pt-1">
                 </div>
                 {/* Banner Tiup Lilin */}
-                <div className="p-2 sm:p-3 rounded-xl bg-gradient-to-br from-rose-50/90 via-amber-50/60 to-orange-50/50 border border-rose-200/70 flex items-center gap-2 sm:gap-3 relative overflow-hidden shadow-2xs">
+                <div className="p-2 sm:p-3 rounded-xl bg-linear-to-br from-rose-50/90 via-amber-50/60 to-orange-50/50 border border-rose-200/70 flex items-center gap-2 sm:gap-3 relative overflow-hidden shadow-2xs">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded-lg bg-white shadow-xs border border-rose-200 flex items-center justify-center text-base sm:text-xl">
                     {data.backPage.banner.emoji}
                   </div>
@@ -170,17 +156,17 @@ export default function AlbumPage() {
 
                 {/* Left Polaroid */}
                 <div className="flex flex-col items-center relative my-1 sm:my-2">
-                  <div className="washi-tape-yellow w-24 sm:w-28 h-3.5 sm:h-4 -mb-2 z-20 rotate-[2deg] flex items-center justify-center text-[7px] sm:text-[10px] font-bold text-amber-800/80 tracking-wider pointer-events-none">
+                  <div className="washi-tape-yellow w-24 sm:w-28 h-3.5 sm:h-4 -mb-2 z-20 rotate-2 flex items-center justify-center text-[7px] sm:text-[10px] font-bold text-amber-800/80 tracking-wider pointer-events-none">
                     {data.backPage.polaroid.washiLabel}
                   </div>
                   <div
-                    className="polaroid-frame bg-white p-2 sm:p-2.5 pb-2.5 sm:pb-3 rounded border border-stone-200 w-full max-w-[170px] sm:max-w-[260px] rotate-[-2deg] cursor-pointer group"
+                    className="polaroid-frame bg-white p-2 sm:p-2.5 pb-2.5 sm:pb-3 rounded border border-stone-200 w-full max-w-[112px] sm:max-w-[170px] rotate-2 cursor-pointer group"
                     onClick={(e) => {
                       e.stopPropagation()
                       openPhoto(data.backPage.polaroid.photoUrlFull, data.backPage.polaroid.caption)
                     }}
                   >
-                    <div className="w-full h-24 sm:h-36 md:h-40 rounded-xs overflow-hidden bg-stone-100 relative">
+                    <div className="w-full aspect-[9/16] rounded-xs overflow-hidden bg-stone-100 relative">
                       <img src={data.backPage.polaroid.photoUrl} alt="Momen Indah" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       <div className="absolute bottom-1 right-1 sm:bottom-1.5 sm:right-1.5 bg-black/40 text-white text-[7px] sm:text-[9px] px-1.5 sm:px-2 py-0.5 rounded-full">
                         {data.backPage.polaroid.location}
@@ -210,7 +196,7 @@ export default function AlbumPage() {
       <div className="mt-1.5 sm:mt-3 flex flex-col items-center gap-2 z-20">
         <button data-gsap-click
           onClick={() => navigate('/game')}
-          className="group px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-full bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 text-white font-bold text-xs sm:text-sm tracking-wide shadow-lg shadow-rose-500/30 hover:shadow-rose-500/50 hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
+          className="group px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-full bg-linear-to-r from-rose-500 via-rose-600 to-amber-500 text-white font-bold text-xs sm:text-sm tracking-wide shadow-lg shadow-rose-500/30 hover:shadow-rose-500/50 hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
         >
           Selanjutnya
           <span className="text-sm sm:text-base group-hover:translate-x-1 transition-transform">➔</span>

@@ -28,15 +28,15 @@ export function useGsapPageAnimation(rootRef) {
       }
 
       if (text.length) {
-        intro.from(text, { y: 28, opacity: 0, filter: 'blur(8px)', stagger: 0.08, duration: 0.65 }, '-=0.35')
+        intro.fromTo(text, { y: 28, opacity: 0, filter: 'blur(8px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', stagger: 0.08, duration: 0.65 }, '-=0.35')
       }
 
       if (images.length) {
-        intro.from(images, { y: 24, opacity: 0, scale: 1.08, filter: 'blur(14px)', duration: 0.9 }, '-=0.5')
+        intro.fromTo(images, { y: 24, opacity: 0, scale: 1.08, filter: 'blur(14px)' }, { y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.9 }, '-=0.5')
       }
 
       if (stagger.length) {
-        intro.from(stagger, { y: 18, opacity: 0, scale: 0.96, stagger: 0.1, duration: 0.55 }, '-=0.5')
+        intro.fromTo(stagger, { y: 18, opacity: 0, scale: 0.96 }, { y: 0, opacity: 1, scale: 1, stagger: 0.1, duration: 0.55 }, '-=0.5')
       }
 
       gsap.utils.toArray('[data-gsap~="parallax"]').forEach((element) => {
